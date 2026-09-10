@@ -3,9 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>TRESEMES · Mediciones v0.6</title>
+<title>TRESEMES · Mediciones v0.6.4</title>
 <style>
 :root{--wood:#6f432d;--wood2:#8e6247;--paper:#f7f4ef;--panel:#fff;--line:#ded3c8;--ink:#2c2927;--muted:#726a64;--ok:#2f7b57;--warn:#a54636}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--paper);color:var(--ink)}button,input,textarea{font:inherit}button{touch-action:manipulation;-webkit-tap-highlight-color:transparent;cursor:pointer}
@@ -23,7 +26,7 @@ main{padding:20px 22px 80px;min-width:0}.hero{display:flex;align-items:center;ju
 </head>
 <body>
 
-<header class="appbar"><div class="brand"><b>TRESEMES · MEDICIONES</b><small>Puertas · obras y viviendas · v0.6.2 dictado directo sin teclado</small></div><div class="actions"><button type="button" class="btn outline" id="backupBtn">Copia de seguridad</button><button type="button" class="btn" id="printBtn">PDF vivienda</button></div></header>
+<header class="appbar"><div class="brand"><b>TRESEMES · MEDICIONES</b><small>Puertas · obras y viviendas · v0.6.4 cantidades corregidas · CLIENTE · PDF marca de agua</small></div><div class="actions"><button type="button" class="btn outline" id="backupBtn">Copia de seguridad</button><button type="button" class="btn" id="printBtn">PDF vivienda</button></div></header>
 <div class="shell"><aside>
 <div class="side-title"><h3>OBRAS</h3><button type="button" class="icon" id="newWork">＋</button></div><input class="search" id="workSearch" placeholder="Buscar obra…"><div class="list" id="workList"></div>
 <div class="field" style="margin:-10px 0 20px"><label>REFERENCIA DE OBRA</label><input id="workReference" placeholder="Ej.: OB-2026-041"></div>
@@ -36,8 +39,8 @@ main{padding:20px 22px 80px;min-width:0}.hero{display:flex;align-items:center;ju
 <section id="measureTab">
 <div class="card dictation-card"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><div><h2>Dictado rápido</h2><div class="note">Pulsa “🎤 Dictar” y habla. No necesitas abrir el teclado.</div></div><span class="active-pill" id="activeDoorPill">Puerta activa: —</span></div>
 <div class="dictation-bar"><textarea id="dictation" readonly inputmode="none" placeholder="Aquí aparecerá temporalmente lo que vas diciendo"></textarea><div class="dictation-buttons"><button type="button" class="btn micbig" id="focusDictation">🎤 Dictar</button><button type="button" class="btn light" id="interpretBtn">Interpretar</button><button type="button" class="btn outline" id="clearDictation">Borrar texto</button></div></div><div class="status" id="dictationStatus">Preparado. Toca el campo o “🎤 Dictar”.</div></div>
-<div class="card"><h2>Ficha de puertas</h2><div class="note">Batiente, cerco y tabique se interpretan como la misma medida. Corredera rellena derecha e izquierda.</div><div class="tablewrap" style="margin-top:10px"><table class="measure"><thead><tr><th>Nº</th><th>ESTANCIA</th><th>PARQUET</th><th>ANCHO</th><th>BATIENTE / CERCO / TABIQUE</th><th>DERECHA</th><th>IZQUIERDA</th><th>ALTURA</th></tr></thead><tbody id="doorBody"></tbody></table></div></div>
-<div class="card"><h3>Datos de la vivienda</h3><div class="grid"><div class="field"><label>PLANTA</label><input data-home="plant"></div><div class="field"><label>VIVIENDA</label><input data-home="code"></div><div class="field"><label>NOMBRE</label><input data-home="customerName"></div><div class="field"><label>TELÉFONO</label><input data-home="phone"></div></div><div class="grid two" style="margin-top:10px"><div class="field"><label>DIRECCIÓN</label><input data-home="address"></div><div class="field"><label>POBLACIÓN</label><input data-home="town"></div></div></div>
+<div class="card"><h2>Ficha de puertas</h2><div class="note">Batiente, cerco y tabique son la misma medida. Puedes decir derecha, izquierda, corredera derecha o corredera izquierda. También admite cantidades: “dos puertas de dormitorio…” rellena DORMITORIO 1 y DORMITORIO 2 con las mismas medidas.</div><div class="tablewrap" style="margin-top:10px"><table class="measure"><thead><tr><th>Nº</th><th>ESTANCIA</th><th>PARQUET</th><th>ANCHO</th><th>BATIENTE / CERCO / TABIQUE</th><th>DERECHA</th><th>IZQUIERDA</th><th>ALTURA</th></tr></thead><tbody id="doorBody"></tbody></table></div></div>
+<div class="card"><h3>Datos de la vivienda</h3><div class="grid"><div class="field"><label>PLANTA</label><input data-home="plant"></div><div class="field"><label>VIVIENDA</label><input data-home="code"></div><div class="field"><label>CLIENTE</label><input data-home="customerName"></div><div class="field"><label>TELÉFONO</label><input data-home="phone"></div></div><div class="grid two" style="margin-top:10px"><div class="field"><label>DIRECCIÓN</label><input data-home="address"></div><div class="field"><label>POBLACIÓN</label><input data-home="town"></div></div></div>
 </section>
 <section id="voiceTab" class="hidden"><div class="card"><h2>Dictado por voz</h2><p class="note">Usa el micrófono del teclado del iPad. No dependemos del reconocimiento de voz del navegador.</p><textarea id="dictation2" style="width:100%;min-height:180px;border:2px solid #c9b19d;border-radius:12px;padding:14px;font-size:19px" placeholder="Toca aquí y pulsa el micrófono del teclado del iPad"></textarea><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button type="button" class="btn" id="interpretBtn2">Interpretar texto</button><button type="button" class="btn outline" id="backMeasure">Volver a medición</button></div><div class="status" id="voiceStatus" style="margin-top:10px">Preparado.</div></div></section>
 <section id="summaryTab" class="hidden">
@@ -61,17 +64,49 @@ function save(){try{localStorage.setItem('tresemes_v06',JSON.stringify(state));}
 function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[;:]/g,',').replace(/\s+/g,' ').trim();}
 var numbers={uno:1,una:1,un:1,dos:2,tres:3,cuatro:4,cinco:5,seis:6,siete:7,ocho:8,nueve:9,diez:10};
 function roomIndex(name,num){name=norm(name);num=parseInt(num||'1',10)||1;if(name.indexOf('entrada')===0)return 0;if(name.indexOf('salon')===0)return 1;if(name.indexOf('cocina')===0)return 2;if(name.indexOf('pasillo')===0)return 3;if(name.indexOf('dormitorio')===0)return 4+Math.max(0,Math.min(5,num-1));if(name.indexOf('bano')===0)return 10+Math.max(0,Math.min(3,num-1));if(name.indexOf('despensa')===0)return 14+Math.max(0,Math.min(1,num-1));if(name.indexOf('cochera')===0)return 16+Math.max(0,Math.min(1,num-1));return -1;}
-function namedRoom(text){var s=norm(text),m=s.match(/\b(entrada|salon|cocina|pasillo|dormitorio|bano|despensa|cochera)(?:\s+(?:numero\s*)?([1-6]|uno|una|dos|tres|cuatro|cinco|seis)\b)?/);if(!m)return null;var n=m[2];if(n&&!/^\d+$/.test(n))n=numbers[n]||1;return{index:roomIndex(m[1],n||1),end:m.index+m[0].length};}
+function namedRoom(text){var s=norm(text),m=s.match(/\b(entrada|salon|cocina|pasillo|dormitorios?|banos?|despensas?|cocheras?)(?:\s+(?:numero\s*)?([1-6]|uno|una|dos|tres|cuatro|cinco|seis)\b)?/);if(!m)return null;var n=m[2];if(n&&!/^\d+$/.test(n))n=numbers[n]||1;return{index:roomIndex(m[1],n||1),end:m.index+m[0].length};}
 function valueAfter(s,keys){var re=new RegExp('\\b(?:'+keys+')\\s*(?:de\\s*)?(\\d{2,4})\\b');var m=s.match(re);return m?m[1]:'';}
 function implicitWidth(s){if(valueAfter(s,'ancho'))return '';var m=s.match(/\b(\d{2,4})\b/);if(!m)return '';var before=s.slice(0,m.index).trim();if(/(?:batiente|cerco|tabique|tab|altura|alto|parquet)\s*$/.test(before))return '';return m[1];}
-function applyText(raw){var h=home(),s=norm(raw),room=namedRoom(s),idx=h.activeDoor;if(room&&room.index>=0){idx=room.index;h.activeDoor=idx;s=s.slice(room.end);}if(idx<0){setStatus('Nombra primero una estancia: Entrada, Salón, Cocina…',true);return false;}var d=h.doors[idx],v;
-v=valueAfter(s,'ancho');if(!v)v=implicitWidth(s);if(v)d.width=v;v=valueAfter(s,'batiente|cerco|tabique|tab');if(v)d.jamb=v;v=valueAfter(s,'altura|alto');if(v)d.height=v;
-var pq=s.match(/\bparquet\s+([^,.]+)/);if(pq)d.parquet=pq[1].trim().toUpperCase();
-if(/\bcorredera\b/.test(s)){d.right='CORREDERA';d.left='CORREDERA';}
-else if(/\bmano\s+derecha\b/.test(s)){d.right='X';d.left='';}
-else if(/\bmano\s+izquierda\b/.test(s)){d.left='X';d.right='';}
-else{if(/\bderecha\s+fija\b/.test(s))d.right='FIJA';else if(/\bderecha\s+abre\b/.test(s))d.right='ABRE';else if(/\babre\s+derecha\b/.test(s))d.right='ABRE';else if(/\bfija\s+derecha\b/.test(s))d.right='FIJA';if(/\bizquierda\s+fija\b/.test(s))d.left='FIJA';else if(/\bizquierda\s+abre\b/.test(s))d.left='ABRE';else if(/\babre\s+izquierda\b/.test(s))d.left='ABRE';else if(/\bfija\s+izquierda\b/.test(s))d.left='FIJA';}
-save();render();setStatus('✓ '+ROOM_NAMES[idx]+' actualizada.',false);return true;}
+function applyValues(d,s){var v;v=valueAfter(s,'ancho');if(!v)v=implicitWidth(s);if(v)d.width=v;v=valueAfter(s,'batiente|cerco|cero|serco|tabique|tab');if(v)d.jamb=v;v=valueAfter(s,'altura|alto');if(v)d.height=v;var pq=s.match(/\bparquet\s+([^,.]+)/);if(pq)d.parquet=pq[1].trim().toUpperCase();
+var sideDetail=/\b(derecha|izquierda)\s+(fija|abre)\b|\b(fija|abre)\s+(derecha|izquierda)\b/.test(s);
+if(/\bcorredera\s+derecha\b/.test(s)){d.right='CORREDERA';d.left='';}
+else if(/\bcorredera\s+izquierda\b/.test(s)){d.left='CORREDERA';d.right='';}
+else if(/\bcorredera\b/.test(s)){d.right='CORREDERA';d.left='CORREDERA';}
+else if(sideDetail){if(/\bderecha\s+fija\b|\bfija\s+derecha\b/.test(s))d.right='FIJA';else if(/\bderecha\s+abre\b|\babre\s+derecha\b/.test(s))d.right='ABRE';if(/\bizquierda\s+fija\b|\bfija\s+izquierda\b/.test(s))d.left='FIJA';else if(/\bizquierda\s+abre\b|\babre\s+izquierda\b/.test(s))d.left='ABRE';}
+else if(/\b(?:mano\s+)?derecha\b/.test(s)){d.right='X';d.left='';}
+else if(/\b(?:mano\s+)?izquierda\b/.test(s)){d.left='X';d.right='';}}
+function quantitySpec(s){
+ var qm=s.match(/\b(2|3|4|5|6|dos|tres|cuatro|cinco|seis)\b/),cat=s.match(/\b(dormitorios?|habitaciones?|banos?|aseos?|despensas?|cocheras?)\b/);
+ if(!qm||!cat)return null;
+ /* Para tratarlo como cantidad exigimos que el número vaya unido a la idea de puertas/unidades,
+    o que aparezca antes de la categoría: "dos puertas de dormitorio", "2 dormitorios". */
+ if(qm.index>cat.index && !/\b(?:puertas?|unidades?|uds?)\b/.test(s))return null;
+ var n=/^\d+$/.test(qm[1])?parseInt(qm[1],10):(numbers[qm[1]]||1),r,c=cat[1];
+ if(c.indexOf('dormitorio')===0||c.indexOf('habitacion')===0)r=[4,9,'DORMITORIOS'];
+ else if(c.indexOf('bano')===0||c.indexOf('aseo')===0)r=[10,13,'BAÑOS'];
+ else if(c.indexOf('despensa')===0)r=[14,15,'DESPENSAS'];
+ else r=[16,17,'COCHERAS'];
+ return{count:Math.min(n,r[1]-r[0]+1),start:r[0],end:r[1],label:r[2]};
+}
+function quantityPayload(s){
+ /* Quitamos únicamente las palabras de cantidad/categoría; mantenemos todas las medidas aunque
+    estén antes o después de "dos puertas de dormitorio". */
+ return s.replace(/\b(2|3|4|5|6|dos|tres|cuatro|cinco|seis)\b/,' ')
+         .replace(/\b(?:puertas?|unidades?|uds?)\b/g,' ')
+         .replace(/\b(?:de|del)\s+(?=(?:dormitorios?|habitaciones?|banos?|aseos?|despensas?|cocheras?)\b)/g,' ')
+         .replace(/\b(?:dormitorios?|habitaciones?|banos?|aseos?|despensas?|cocheras?)\b/,' ')
+         .replace(/\s+/g,' ').trim();
+}
+function applyText(raw){var h=home(),s=norm(raw),q=quantitySpec(s),room,idx=h.activeDoor;if(q){
+ var payload=quantityPayload(s),targets=[],i;
+ /* La orden de cantidad siempre representa exactamente las primeras N unidades de esa categoría.
+    Así "dos puertas de dormitorio" rellena Dormitorio 1 y Dormitorio 2 y, si se repite, las actualiza. */
+ for(i=q.start;i<=q.end&&targets.length<q.count;i++)targets.push(i);
+ for(i=0;i<targets.length;i++)applyValues(h.doors[targets[i]],payload);
+ h.activeDoor=targets[targets.length-1];save();render();
+ var names=targets.map(function(t){return ROOM_NAMES[t];}).join(' + ');
+ setStatus('✓ '+targets.length+' puertas registradas: '+names+'.',false);return true;
+ }room=namedRoom(s);if(room&&room.index>=0){idx=room.index;h.activeDoor=idx;s=s.slice(room.end);}if(idx<0){setStatus('Nombra primero una estancia: Entrada, Salón, Cocina…',true);return false;}applyValues(h.doors[idx],s);save();render();setStatus('✓ '+ROOM_NAMES[idx]+' actualizada.',false);return true;}
 function interpretAll(text){var chunks=String(text||'').split(/[\.\n]+/),i,used=false;for(i=0;i<chunks.length;i++){if(norm(chunks[i]))used=applyText(chunks[i])||used;}return used;}
 function setStatus(t,bad){var a=document.getElementById('dictationStatus'),b=document.getElementById('voiceStatus');a.textContent=t;a.style.background=bad?'#fff0ed':'#eef6f1';a.style.color=bad?'#8b352b':'#31654b';b.textContent=t;}
 function doorHasData(d){return !!(d.parquet||d.width||d.jamb||d.right||d.left||d.height);}
@@ -114,9 +149,14 @@ function pdfFromJpeg(dataUrl,w,h){var img=b64bytes(dataUrl.split(',')[1]),PW=595
 function loadLogo(){return new Promise(function(resolve){var im=new Image();im.onload=function(){resolve(im);};im.onerror=function(){resolve(null);};im.src=PDF_LOGO;});}
 function fitText(ctx,text,maxWidth,size,min){ctx.font='600 '+size+'px -apple-system, BlinkMacSystemFont, Arial';while(size>min&&ctx.measureText(String(text)).width>maxWidth){size-=1;ctx.font='600 '+size+'px -apple-system, BlinkMacSystemFont, Arial';}return size;}
 async function pdfCanvas(){var W=1240,H=1754,c=document.createElement('canvas');c.width=W;c.height=H;var x=c.getContext('2d'),h=home(),logo=await loadLogo();x.fillStyle='#fbfaf7';x.fillRect(0,0,W,H);x.fillStyle='#744a32';x.fillRect(0,0,W,18);x.fillStyle='#ffffff';x.fillRect(42,42,W-84,210);x.strokeStyle='#e0d6cc';x.lineWidth=2;x.strokeRect(42,42,W-84,210);
-if(logo){var lr=logo.width/logo.height,lw=120,lh=lw/lr;x.drawImage(logo,68,70,lw,lh);x.save();x.globalAlpha=.035;var ww=620,wh=ww/lr;x.translate(W/2,H/2);x.rotate(-0.10);x.drawImage(logo,-ww/2,-wh/2,ww,wh);x.restore();}
+if(logo){var lr=logo.width/logo.height,lw=120,lh=lw/lr;x.drawImage(logo,68,70,lw,lh);
+ /* Marca de agua TRESEMES repetida por TODO el fondo de la página. */
+ x.save();x.globalAlpha=.055;
+ var ww=330,wh=ww/lr;
+ for(var wy=320;wy<H-90;wy+=330){for(var wx=120;wx<W;wx+=400){x.save();x.translate(wx,wy);x.rotate(-0.16);x.drawImage(logo,-ww/2,-wh/2,ww,wh);x.restore();}}
+ x.restore();}
 x.fillStyle='#2c2927';x.font='800 38px -apple-system,Arial';x.fillText('MEDICIÓN DE PUERTAS',225,103);x.font='600 20px -apple-system,Arial';x.fillStyle='#756b63';x.fillText('TRESEMES diseño en madera',225,137);x.font='700 20px -apple-system,Arial';x.fillStyle='#744a32';x.fillText('REF. OBRA: '+(state.work.reference||'—'),225,180);x.fillStyle='#2c2927';x.fillText('OBRA: '+state.work.name,225,216);
-x.fillStyle='#f1e8df';x.fillRect(42,270,W-84,104);x.fillStyle='#5a5048';x.font='700 18px -apple-system,Arial';x.fillText('VIVIENDA',62,304);x.fillText('PLANTA',280,304);x.fillText('NOMBRE',455,304);x.fillText('POBLACIÓN',850,304);x.fillStyle='#24211f';x.font='700 23px -apple-system,Arial';x.fillText(h.label||'',62,344);x.fillText(h.plant||'',280,344);fitText(x,h.customerName||'',350,23,14);x.fillText(h.customerName||'',455,344);fitText(x,h.town||'',320,23,14);x.fillText(h.town||'',850,344);
+x.fillStyle='#f1e8df';x.fillRect(42,270,W-84,104);x.fillStyle='#5a5048';x.font='700 18px -apple-system,Arial';x.fillText('VIVIENDA',62,304);x.fillText('PLANTA',280,304);x.fillText('CLIENTE',455,304);x.fillText('POBLACIÓN',850,304);x.fillStyle='#24211f';x.font='700 23px -apple-system,Arial';x.fillText(h.label||'',62,344);x.fillText(h.plant||'',280,344);fitText(x,h.customerName||'',350,23,14);x.fillText(h.customerName||'',455,344);fitText(x,h.town||'',320,23,14);x.fillText(h.town||'',850,344);
 var cols=[42,100,355,515,650,815,930,1045,1198],heads=['Nº','ESTANCIA','PARQUET','ANCHO','CERCO','DERECHA','IZQUIERDA','ALTURA'];var y=410,rowH=58;x.fillStyle='#744a32';x.fillRect(42,y,W-84,48);x.fillStyle='white';x.font='800 16px -apple-system,Arial';for(var i=0;i<heads.length;i++){var tw=x.measureText(heads[i]).width,mid=(cols[i]+cols[i+1])/2;x.fillText(heads[i],mid-tw/2,y+30);}y+=48;x.font='600 17px -apple-system,Arial';for(i=0;i<18;i++){var d=h.doors[i];x.fillStyle=i%2?'#ffffff':'#f8f4ef';x.fillRect(42,y,W-84,rowH);x.strokeStyle='#e6ddd5';x.beginPath();x.moveTo(42,y+rowH);x.lineTo(W-42,y+rowH);x.stroke();var vals=[String(i+1),ROOM_NAMES[i],d.parquet||'',d.width||'',d.jamb||'',d.right||'',d.left||'',d.height||''];x.fillStyle='#292624';for(var j=0;j<vals.length;j++){var val=vals[j],left=cols[j]+8,right=cols[j+1]-8,max=right-left;fitText(x,val,max,17,11);var width=x.measureText(val).width,tx=j===1?left:left+(max-width)/2;x.fillText(val,tx,y+36);}for(j=1;j<cols.length-1;j++){x.strokeStyle='#eee6df';x.beginPath();x.moveTo(cols[j],y);x.lineTo(cols[j],y+rowH);x.stroke();}y+=rowH;}
 x.fillStyle='#f1e8df';x.fillRect(42,1530,W-84,122);x.fillStyle='#5a5048';x.font='700 16px -apple-system,Arial';x.fillText('DIRECCIÓN',62,1563);x.fillText('TELÉFONO',62,1611);x.fillStyle='#24211f';x.font='600 19px -apple-system,Arial';fitText(x,h.address||'',900,19,12);x.fillText(h.address||'',190,1563);x.fillText(h.phone||'',190,1611);x.fillStyle='#887d75';x.font='500 14px -apple-system,Arial';x.fillText('Datos guardados de forma estructurada para recuento y preparación posterior del pedido.',42,1710);return c;}
 function pdfName(){var ref=(state.work.reference||state.work.name||'OBRA').replace(/[^A-Za-z0-9_-]+/g,'_'),hv=(home().label||'VIVIENDA').replace(/[^A-Za-z0-9_-]+/g,'_');return 'TRESEMES_'+ref+'_'+hv+'.pdf';}
