@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>TRESEMES · Mediciones v0.6.14 · Ruleta independiente</title>
+<title>TRESEMES · Mediciones v0.6.15 · Cambios descontados</title>
 <style>
 :root{--wood:#6f432d;--wood2:#8e6247;--paper:#f7f4ef;--panel:#fff;--line:#ded3c8;--ink:#2c2927;--muted:#726a64;--ok:#2f7b57;--warn:#a54636}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--paper);color:var(--ink)}button,input,textarea{font:inherit}button{touch-action:manipulation;-webkit-tap-highlight-color:transparent;cursor:pointer}
@@ -95,7 +95,7 @@ aside{background:linear-gradient(180deg,#eee8e1 0%,#f5f0eb 100%)}
 </head>
 <body>
 
-<header class="appbar"><div class="brand"><b>TRESEMES · MEDICIONES</b><small>Puertas · obras y viviendas · v0.6.14 · ruleta independiente + mecanizados + BLOCK</small></div><div class="actions"><button type="button" class="btn outline" id="backupBtn">Copia de seguridad</button><button type="button" class="btn" id="printBtn">PDF vivienda</button></div></header>
+<header class="appbar"><div class="brand"><b>TRESEMES · MEDICIONES</b><small>Puertas · obras y viviendas · v0.6.15 · cambios descontados + ruleta + mecanizados + BLOCK</small></div><div class="actions"><button type="button" class="btn outline" id="backupBtn">Copia de seguridad</button><button type="button" class="btn" id="printBtn">PDF vivienda</button></div></header>
 <div class="shell"><aside>
 <div class="side-title"><h3>OBRAS</h3><button type="button" class="icon" id="newWork">＋</button></div><input class="search" id="workSearch" placeholder="Buscar obra…"><div class="list" id="workList"></div>
 <div class="field" style="margin:-10px 0 20px"><label>REFERENCIA DE OBRA</label><input id="workReference" placeholder="Ej.: OB-2026-041"></div>
@@ -218,7 +218,7 @@ function supplierMachining(di,d){if(!isSliding(d))return '—';if(di>=10&&di<=13
 function supplierOrderType(di,d){var t=supplierType(di,d);return isSliding(d)?t:'BLOCK '+t;}
 function supplierOpening(d){var r=String(d.right||'').toUpperCase(),l=String(d.left||'').toUpperCase();if(r&&l)return 'D:'+r+' / I:'+l;if(r)return 'D:'+r;if(l)return 'I:'+l;return 'REVISAR';}
 function physicalLeaves(leaf){return String(leaf||'').indexOf('+')>=0?2:1;}
-function supplierGroups(){var map={},homes=state.work.homes,rank={ENTRADA:0,PUERTA:1,VIDRIERA:2,CORREDERA:3,'CORREDERA VIDRIERA':4};for(var hi=0;hi<homes.length;hi++){var h=homes[hi],chg=changeDescription(h);for(var di=0;di<h.doors.length;di++){var d=h.doors[di];if(!doorHasData(d))continue;var type=supplierType(di,d),orderType=supplierOrderType(di,d),machining=supplierMachining(di,d),leaf=supplierLeaf(di,d),jamb=supplierJamb(di,d),height=supplierHeight(d),opening=supplierOpening(d);var key=[chg,type,orderType,machining,leaf,jamb,height,opening].join('|');if(!map[key])map[key]={count:0,type:type,orderType:orderType,machining:machining,change:chg,leaf:leaf,jamb:jamb,height:height,opening:opening,loc:[]};map[key].count++;map[key].loc.push(h.label+' '+ROOM_NAMES[di]);}}return Object.keys(map).map(function(k){return map[k];}).sort(function(a,b){if((a.change==='NO')!==(b.change==='NO'))return a.change==='NO'?-1:1;if(a.change!==b.change)return a.change.localeCompare(b.change);if(rank[a.type]!==rank[b.type])return rank[a.type]-rank[b.type];return String(a.leaf).localeCompare(String(b.leaf),undefined,{numeric:true});});}
+function supplierGroups(){var map={},homes=state.work.homes,rank={ENTRADA:0,PUERTA:1,VIDRIERA:2,CORREDERA:3,'CORREDERA VIDRIERA':4};for(var hi=0;hi<homes.length;hi++){var h=homes[hi],chg=changeDescription(h);for(var di=0;di<h.doors.length;di++){var d=h.doors[di];if(!doorHasData(d))continue;var type=supplierType(di,d),orderType=supplierOrderType(di,d),machining=supplierMachining(di,d),leaf=supplierLeaf(di,d),jamb=supplierJamb(di,d),height=supplierHeight(d),opening=supplierOpening(d);var key=[chg,type,orderType,machining,leaf,jamb,height,opening].join('|');if(!map[key])map[key]={count:0,type:type,orderType:orderType,machining:machining,change:chg,leaf:leaf,jamb:jamb,height:height,opening:opening,loc:[]};map[key].count++;map[key].loc.push(h.label+' '+ROOM_NAMES[di]);}}var groups=Object.keys(map).map(function(k){return map[k];});/* v0.6.15: cada CAMBIO descuenta una unidad equivalente del modelo base y permanece una sola vez en CAMBIO. No modifica BLOCK, correderas ni mecanizados. */for(var ci=0;ci<groups.length;ci++){var cg=groups[ci];if(cg.change==='NO'||cg.count<=0)continue;var pending=cg.count;for(var ni=0;ni<groups.length&&pending>0;ni++){var ng=groups[ni];if(ng.change!=='NO'||ng.count<=0)continue;if(ng.type===cg.type&&ng.orderType===cg.orderType&&ng.machining===cg.machining&&ng.leaf===cg.leaf&&ng.jamb===cg.jamb&&ng.height===cg.height&&ng.opening===cg.opening){var take=Math.min(pending,ng.count);ng.count-=take;pending-=take;}}}groups=groups.filter(function(g){return g.count>0;});return groups.sort(function(a,b){if((a.change==='NO')!==(b.change==='NO'))return a.change==='NO'?-1:1;if(a.change!==b.change)return a.change.localeCompare(b.change);if(rank[a.type]!==rank[b.type])return rank[a.type]-rank[b.type];return String(a.leaf).localeCompare(String(b.leaf),undefined,{numeric:true});});}
 function updateSummary(){
  var h=home(),n=0,i;
  for(i=0;i<h.doors.length;i++)if(doorHasData(h.doors[i]))n++;
@@ -300,6 +300,7 @@ var spb=document.getElementById('supplierPdfBtn');if(spb)spb.onclick=generateSup
 if(location.search.indexOf('test=1')>=0){document.getElementById('dictation').value='Entrada 835 cerco 210 mano izquierda altura 2060';interpretAll(document.getElementById('dictation').value);interpretAll('mano derecha');interpretAll('Despensa 850 tabique 90 corredera altura 2060');document.body.setAttribute('data-test',home().doors[0].width+'|'+home().doors[0].jamb+'|'+home().doors[0].right+'|'+home().doors[0].left+'|'+home().doors[14].right+'|'+home().doors[14].left);}
 })();
 
+/* v0.6.15 · corrección pedido: los CAMBIOS se descuentan del modelo base equivalente y se mantienen una sola vez en su grupo de cambio. BLOCK y mecanizados sin cambios. */
 /* v0.6.13 · cambios de pedido: BLOCK en abatibles; correderas baño = ranura/canal + kit condena; resto correderas = ranura/canal + uñero. */
 /* v0.6.12 · ruleta: capa de selección; no altera reglas de medición/pedido */
 (function(){
